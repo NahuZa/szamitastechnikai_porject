@@ -1,0 +1,2 @@
+ASUS Dual GeForce RTX 3060 OC V2 Videokártya;128390;24;2 GB GDDR6*192 bites;Slot: PCI Express 4.0*Memória típusa: GDDR6*Videó processzor: nVidia GeForce RTX 3060*Maximális felbontás: 7680 x 4320;
+Gigabyte GeForce RTX 4060 EAGLE OC Videokártya;129890;8GB GDDR6*128bit;Slot: PCI Express 4.0*Memória típusa: GDDR6*Videó processzor: nVidia GeForce RTX 4060*Maximális felbontás: 7680 x 4320;
