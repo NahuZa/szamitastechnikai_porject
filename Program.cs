@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.ComponentModel.Design;
 
 namespace szamitasTechinkaiEszkozok
 {
@@ -69,7 +70,62 @@ namespace szamitasTechinkaiEszkozok
         static void Main(string[] args)
         {
             List<Adatok> adatoks = Beolvasas();
-            Kilistaz(adatoks);
+            
+
+            int kivalasztott = 0;
+            string[] opciok = {"Kilistázás", "Új adat", "Módosítás", "Törlés" };
+            #region Menü
+            ConsoleKeyInfo lenyomott;
+
+            do
+            {
+                MenuCommand:
+                Console.Clear();
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine("Válasszon az alábbi lehetőségek közül:\n");
+
+                #region Menü kiírása
+                for (int i = 0; i < opciok.Length; i++)
+                {
+                    if (i == kivalasztott)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Green;
+                    }
+                    else
+                    {
+                        Console.ForegroundColor = ConsoleColor.White;
+                    }
+                    Console.WriteLine("\t" + (i + 1) + ") " + opciok[i]);
+                }
+                #endregion
+
+                #region Gomblenyomás
+
+                lenyomott = Console.ReadKey();
+
+                switch (lenyomott.Key)
+                {
+                    case ConsoleKey.UpArrow: if (kivalasztott > 0) kivalasztott--; break;
+                    case ConsoleKey.DownArrow: if (kivalasztott < opciok.Length - 1) kivalasztott++; break;
+                }
+                #endregion
+                if (kivalasztott == 0)
+                {
+                    Kilistaz(adatoks);
+                    Console.Write("Írd be azt hogy 'vissza' ha vissza szeretnél térni a főmenűbe: ");
+                    string vissza = Console.ReadLine();
+                    if(vissza =="vissza" || vissza == "Vissza")
+                    {
+                      goto MenuCommand;
+                    }
+                    
+
+                }
+            } while (lenyomott.Key != ConsoleKey.Enter);
+            #endregion
+            
+
+            
         }
     }
 }
