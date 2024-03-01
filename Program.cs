@@ -126,13 +126,92 @@ namespace szamitasTechinkaiEszkozok
             for (int i = 0; i < adatoks.Count(); i++)
             {
                 Console.CursorLeft = 0;
-                Console.Write($"{adatoks[i].nev}");
+                Console.Write($"{i+1}) {adatoks[i].nev}");
                 Console.CursorLeft = 90;
                 Console.Write($"{adatoks[i].ar}FT\n");
             }
             Console.WriteLine();
         }
 
+    
+            static void Uj(List<Adatok> adatoks)
+
+        {
+
+            TextWriter sw = new StreamWriter("teszt.txt", true);
+
+            List<string> parameterek = new List<string>();
+
+            List<string> jellemzok = new List<string>();
+
+            Adatok temp = new Adatok();
+
+            Console.Clear();
+
+            Console.WriteLine("Az eszköz neve? ");
+
+            string nev = Console.ReadLine();
+
+            temp.nev = nev;
+
+            Console.WriteLine("\nAz eszköz ára? ");
+
+            string ar = Console.ReadLine();
+
+            temp.ar = int.Parse(ar);
+
+            Console.WriteLine("\nAz eszközből hány darab található készleten? ");
+
+            string db = Console.ReadLine();
+
+            temp.db = int.Parse(db);
+
+            string sv;
+
+            do
+
+            {
+
+                Console.WriteLine("\nAz eszköz egy paramétere? (0-KÖVETKEZŐ_ADAT) ");
+
+                sv = Console.ReadLine();
+
+                if (sv != "0")
+
+                {
+
+                    temp.parameterek.Add(sv);
+
+                }
+
+            } while (sv != "0");
+
+            do
+
+            {
+
+                Console.WriteLine("\nAz eszköz egy jellemzője, kérem a következő példa alapján:'Videó processzor: nVidia GeForce RTX 3060' (0-KÖVETKEZŐ_ADAT) ");
+
+                sv = Console.ReadLine();
+
+                if (sv != "0")
+
+                {
+
+                    temp.jellemzok.Add(sv);
+
+                }
+
+            } while (sv != "0");
+
+            adatoks.Add(temp);
+
+        }
+
+        static void Torles(List<Adatok> adatoks, int index)
+        {
+          adatoks.RemoveAt(index-1);
+        }
         static void Main(string[] args)
         {
             List<Adatok> adatoks = Beolvasas();
@@ -213,7 +292,7 @@ namespace szamitasTechinkaiEszkozok
                         case ConsoleKey.UpArrow: if (bentkivalasztott > 0) bentkivalasztott--; break;
                         case ConsoleKey.DownArrow: if (bentkivalasztott < adatoks.Count - 1) bentkivalasztott++; break;
                     }
-                   
+                  
 
                     } while (bentlenyomott.Key != ConsoleKey.Enter);
                     #endregion
@@ -225,7 +304,24 @@ namespace szamitasTechinkaiEszkozok
                     {
                         goto MenuCommand;
                     }
+                }
 
+                else if (kivalasztott == 3)
+                {
+                    TorlesCommand:
+                    KilistazTermek(adatoks);
+                    Console.Write($"Adja meg hanyadik elemet kívánja kitörölni, vagy lépjen vissza a 'vissza' parancsal ");
+                    string torleshez=Console.ReadLine().ToUpper();
+                    if(torleshez == "VISSZA")
+                    {
+                        goto MenuCommand;
+                    }
+                    else
+                    {
+                        int hanyadik=int.Parse(torleshez);
+                        Torles(adatoks, hanyadik);
+                        goto TorlesCommand;
+                    }
                 }
             } while (lenyomott.Key != ConsoleKey.Enter);
             #endregion
