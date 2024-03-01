@@ -10,7 +10,7 @@ namespace szamitasTechinkaiEszkozok
 {
     internal class Program
     {
-        class Adatok 
+        class Adatok
         {
             public string nev;
             public int ar, db;
@@ -26,7 +26,7 @@ namespace szamitasTechinkaiEszkozok
             {
                 string sor = sr.ReadLine();
                 string[] sorok = sor.Split(';');
-                
+
                 Adatok temp = new Adatok();
                 temp.nev = sorok[0];
                 temp.ar = int.Parse(sorok[1]);
@@ -67,19 +67,37 @@ namespace szamitasTechinkaiEszkozok
                 Console.WriteLine();
             }
         }
+
+        static void KilistazTermek(List<Adatok> adatoks)
+        {
+            Console.Clear();
+            Console.Title = "Eszközök";
+            Console.SetWindowSize(150, 63);
+            Console.CursorSize = 20;
+
+            for (int i = 0; i < adatoks.Count(); i++)
+            {
+                Console.CursorLeft = 0;
+                Console.Write($"{adatoks[i].nev}");
+                Console.CursorLeft = 90;
+                Console.Write($"{adatoks[i].ar}FT\n");
+            }
+            Console.WriteLine();
+        }
+
         static void Main(string[] args)
         {
             List<Adatok> adatoks = Beolvasas();
-            
+
 
             int kivalasztott = 0;
-            string[] opciok = {"Kilistázás", "Új adat", "Módosítás", "Törlés" };
+            string[] opciok = { "Kilistázás", "Új adat", "Módosítás", "Törlés" };
             #region Menü
             ConsoleKeyInfo lenyomott;
 
             do
             {
-                MenuCommand:
+            MenuCommand:
                 Console.Clear();
                 Console.ForegroundColor = ConsoleColor.White;
                 Console.WriteLine("Válasszon az alábbi lehetőségek közül:\n");
@@ -111,21 +129,21 @@ namespace szamitasTechinkaiEszkozok
                 #endregion
                 if (kivalasztott == 0)
                 {
-                    Kilistaz(adatoks);
+                    KilistazTermek(adatoks);
                     Console.Write("Írd be azt hogy 'vissza' ha vissza szeretnél térni a főmenűbe: ");
-                    string vissza = Console.ReadLine();
-                    if(vissza =="vissza" || vissza == "Vissza")
+                    string vissza = Console.ReadLine().ToUpper();
+                    if (vissza == "VISSZA")
                     {
-                      goto MenuCommand;
+                        goto MenuCommand;
                     }
-                    
+
 
                 }
             } while (lenyomott.Key != ConsoleKey.Enter);
             #endregion
-            
 
-            
+
+
         }
     }
 }
