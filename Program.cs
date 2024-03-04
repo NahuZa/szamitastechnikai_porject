@@ -21,9 +21,10 @@ namespace szamitasTechinkaiEszkozok
         {
             StreamReader sr = new StreamReader("Informaciok.txt");
             List<Adatok> adatoks = new List<Adatok>();
+            
 
             while (!sr.EndOfStream)
-            {
+                {
                 string sor = sr.ReadLine();
                 string[] sorok = sor.Split(';');
 
@@ -65,7 +66,7 @@ namespace szamitasTechinkaiEszkozok
         {
             Console.Clear();
             Console.Title = adatoks[index].nev + " információi:";
-            Console.SetWindowSize(150, 63);
+            Console.SetWindowSize(150, 43);
             Console.CursorSize = 20;
 
             if (AkciosE(adatoks, index))
@@ -120,7 +121,7 @@ namespace szamitasTechinkaiEszkozok
         {
             Console.Clear();
             Console.Title = "Eszközök";
-            Console.SetWindowSize(150, 63);
+            Console.SetWindowSize(150, 43);
             Console.CursorSize = 20;
 
             for (int i = 0; i < adatoks.Count(); i++)
@@ -134,11 +135,11 @@ namespace szamitasTechinkaiEszkozok
         }
 
     
-            static void Uj(List<Adatok> adatoks)
+        static void Uj(List<Adatok> adatoks)
 
         {
 
-            TextWriter sw = new StreamWriter("teszt.txt", true);
+       
 
             List<string> parameterek = new List<string>();
 
@@ -211,14 +212,85 @@ namespace szamitasTechinkaiEszkozok
         static void Torles(List<Adatok> adatoks, int index)
         {
           adatoks.RemoveAt(index-1);
+            Mentes(adatoks);
+        }
+
+        static void Modositas(List<Adatok> adatoks)
+        {
+            Console.Clear();
+            Console.WriteLine($"Mit szeretnél módosítani?");
+            string[] lehetosegek = { "Név", "Ár", "Mennyiség", "Paraméterek", "Jellemzők"};
+            int kivalasztott = 0;
+            ConsoleKeyInfo lenyomott;
+            do
+            {
+                Console.Clear();
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine("Válasszon az alábbi lehetőségek közül:\n");
+
+                #region Menü kiírása
+                for (int i = 0; i < lehetosegek.Length; i++)
+                {
+                    if (i == kivalasztott)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Green;
+                    }
+                    else
+                    {
+                        Console.ForegroundColor = ConsoleColor.White;
+                    }
+                    Console.WriteLine("\t" + (i + 1) + ") " + lehetosegek[i]);
+                }
+                #endregion
+
+                #region Gomblenyomás
+
+                lenyomott = Console.ReadKey();
+
+                switch (lenyomott.Key)
+                {
+                    case ConsoleKey.UpArrow: if (kivalasztott > 0) kivalasztott--; break;
+                    case ConsoleKey.DownArrow: if (kivalasztott < lehetosegek.Length - 1) kivalasztott++; break;
+                }
+                #endregion
+
+            } while (true);
+        }
+
+        static void Mentes(List<Adatok> adatoks)
+        {
+            TextWriter sw = new StreamWriter("informaciok.txt", true);
+
+            for (int i = 0; i < adatoks.Count(); i++)
+            {
+                sw.Write($"{adatoks[i].nev};{adatoks[i].ar};{adatoks[i].db};");
+
+                for (int j = 0; j <= adatoks[i].parameterek.Count() - 2; j++)
+                {
+                    sw.Write($"{adatoks[i].parameterek[j]}*");
+                }
+
+                sw.Write($"{adatoks[i].parameterek[adatoks[i].parameterek.Count() - 1]}");
+
+                for (int j = 0; j <= adatoks[i].jellemzok.Count() - 2; j++)
+                {
+                    sw.Write($"{adatoks[i].jellemzok[j]}*");
+                }
+
+                sw.Write($"{adatoks[i].jellemzok[adatoks[i].jellemzok.Count() - 1]}\n");
+
+            }
+
+            sw.Close();
+
         }
         static void Main(string[] args)
         {
             List<Adatok> adatoks = Beolvasas();
-
+            bool orok = true;
 
             int kivalasztott = 0;
-            string[] opciok = { "Kilistázás", "Új adat", "Módosítás", "Törlés" };
+            string[] opciok = { "Kilistázás", "Új adat", "Módosítás", "Törlés", "Mentés" };
             #region Menü
             ConsoleKeyInfo lenyomott;
 
@@ -227,7 +299,7 @@ namespace szamitasTechinkaiEszkozok
             MenuCommand:
                 Console.Clear();
                 Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine("Válasszon az alábbi lehetőségek közül:\n");
+                Console.WriteLine("Válasszon az alábbi opciók közül:\n");
 
                 #region Menü kiírása
                 for (int i = 0; i < opciok.Length; i++)
@@ -254,76 +326,102 @@ namespace szamitasTechinkaiEszkozok
                     case ConsoleKey.DownArrow: if (kivalasztott < opciok.Length - 1) kivalasztott++; break;
                 }
                 #endregion
-                if (kivalasztott == 0)
+                if (lenyomott.Key == ConsoleKey.Enter)
                 {
-                    int bentkivalasztott = 0;
-                    ConsoleKeyInfo bentlenyomott;
-                    
-                    do { 
-                    Console.Clear();
-                    Console.ForegroundColor = ConsoleColor.White;
-                    for (int i = 0; i < adatoks.Count; i++)
+                    if (kivalasztott == 0)
                     {
-                        if (i == bentkivalasztott)
+                        int bentkivalasztott = 0;
+                        ConsoleKeyInfo bentlenyomott;
+
+                        do
                         {
-                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.Clear();
+                            Console.ForegroundColor = ConsoleColor.White;
+                            for (int i = 0; i < adatoks.Count; i++)
+                            {
+                                if (i == bentkivalasztott)
+                                {
+                                    Console.ForegroundColor = ConsoleColor.Green;
+                                }
+                                else
+                                {
+                                    Console.ForegroundColor = ConsoleColor.White;
+                                }
+
+                                Console.Title = "Eszközök";
+                                Console.SetWindowSize(150, 43);
+                                Console.CursorSize = 20;
+                                Console.CursorLeft = 0;
+                                Console.Write($"{i + 1}) {adatoks[i].nev}");
+                                Console.CursorLeft = 90;
+                                Console.Write($"{adatoks[i].ar}FT\n");
+
+                            }
+
+                            #region Gomblenyomás
+
+                            bentlenyomott = Console.ReadKey();
+
+                            switch (bentlenyomott.Key)
+                            {
+                                case ConsoleKey.UpArrow: if (bentkivalasztott > 0) bentkivalasztott--; break;
+                                case ConsoleKey.DownArrow: if (bentkivalasztott < adatoks.Count - 1) bentkivalasztott++; break;
+                            }
+
+
+                        } while (bentlenyomott.Key != ConsoleKey.Enter);
+                        #endregion
+                        Console.Clear();
+                        KilistazInformacio(adatoks, bentkivalasztott);
+                        Console.Write("Írd be azt hogy 'vissza' ha vissza szeretnél térni a főmenűbe: ");
+                        string vissza = Console.ReadLine().ToUpper();
+                        if (vissza == "VISSZA")
+                        {
+                            goto MenuCommand;
+                        }
+                    }
+                    else if (kivalasztott == 1)
+                    {
+                        Uj(adatoks);
+                    }
+                    else if (kivalasztott == 2)
+                    {
+                        Modositas(adatoks);
+                    }
+                    else if (kivalasztott == 3)
+                    {
+                    TorlesCommand:
+                        Console.ForegroundColor = ConsoleColor.White;
+                        KilistazTermek(adatoks);
+                        Console.Write($"Adja meg hanyadik elemet kívánja kitörölni, vagy lépjen vissza a 'vissza' parancsal: ");
+                        string torleshez = Console.ReadLine().ToUpper();
+                        if (torleshez == "VISSZA")
+                        {
+                            goto MenuCommand;
                         }
                         else
                         {
-                            Console.ForegroundColor = ConsoleColor.White;
+                            int hanyadik = int.Parse(torleshez);
+                            Torles(adatoks, hanyadik);
+                            Mentes(adatoks);    
+                            goto TorlesCommand;
                         }
-                            
-                            Console.Title = "Eszközök";
-                            Console.SetWindowSize(150, 63);
-                            Console.CursorSize = 20;
-                            Console.CursorLeft = 0;
-                            Console.Write($"{i+1}) {adatoks[i].nev}");
-                            Console.CursorLeft = 90;
-                            Console.Write($"{adatoks[i].ar}FT\n");
-
-                        }
-
-                    #region Gomblenyomás
-
-                    bentlenyomott = Console.ReadKey();
-
-                    switch (bentlenyomott.Key)
-                    {
-                        case ConsoleKey.UpArrow: if (bentkivalasztott > 0) bentkivalasztott--; break;
-                        case ConsoleKey.DownArrow: if (bentkivalasztott < adatoks.Count - 1) bentkivalasztott++; break;
+                        
                     }
-                  
-
-                    } while (bentlenyomott.Key != ConsoleKey.Enter);
-                    #endregion
-                    Console.Clear();
-                    KilistazInformacio(adatoks, bentkivalasztott);
-                    Console.Write("Írd be azt hogy 'vissza' ha vissza szeretnél térni a főmenűbe: ");
-                    string vissza = Console.ReadLine().ToUpper();
-                    if (vissza == "VISSZA")
+                    else if(kivalasztott == 4)
                     {
-                        goto MenuCommand;
+                        Mentes(adatoks);
+                        Console.Clear ();
+                        Console.WriteLine("Adatok elmentve");
+                        Console.Write("Írd be azt hogy 'vissza' ha vissza szeretnél térni a főmenűbe: ");
+                        string vissza = Console.ReadLine().ToUpper();
+                        if (vissza == "VISSZA")
+                        {
+                            goto MenuCommand;
+                        }
                     }
                 }
-
-                else if (kivalasztott == 3)
-                {
-                    TorlesCommand:
-                    KilistazTermek(adatoks);
-                    Console.Write($"Adja meg hanyadik elemet kívánja kitörölni, vagy lépjen vissza a 'vissza' parancsal ");
-                    string torleshez=Console.ReadLine().ToUpper();
-                    if(torleshez == "VISSZA")
-                    {
-                        goto MenuCommand;
-                    }
-                    else
-                    {
-                        int hanyadik=int.Parse(torleshez);
-                        Torles(adatoks, hanyadik);
-                        goto TorlesCommand;
-                    }
-                }
-            } while (lenyomott.Key != ConsoleKey.Enter);
+            } while (orok==true);
             #endregion
 
 
