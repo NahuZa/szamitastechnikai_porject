@@ -277,7 +277,7 @@ namespace szamitasTechinkaiEszkozok
                     sw.Write($"{adatoks[i].jellemzok[j]}*");
                 }
 
-                sw.Write($"{adatoks[i].jellemzok[adatoks[i].jellemzok.Count() - 1]}\n");
+                sw.WriteLine($"{adatoks[i].jellemzok[adatoks[i].jellemzok.Count() - 1]}");
 
             }
 
