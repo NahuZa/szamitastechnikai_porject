@@ -150,14 +150,14 @@ namespace szamitasTechinkaiEszkozok
                     sw.Write($"{adatoks[i].parameterek[j]}*");
                 }
 
-                sw.Write($"{adatoks[i].parameterek[adatoks[i].parameterek.Count() - 1]}");
+                sw.Write($"{adatoks[i].parameterek[adatoks[i].parameterek.Count() - 1]};");
 
                 for (int j = 0; j <= adatoks[i].jellemzok.Count() - 2; j++)
                 {
                     sw.Write($"{adatoks[i].jellemzok[j]}*");
                 }
 
-                sw.Write($"{adatoks[i].jellemzok[adatoks[i].jellemzok.Count() - 1]};\n");
+                sw.Write($"{adatoks[i].jellemzok[adatoks[i].jellemzok.Count() - 1]}\n");
 
             }
 
@@ -418,6 +418,18 @@ namespace szamitasTechinkaiEszkozok
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("SIKERESEN MENTVE");
         }
+
+        static void ModositJell(List<Adatok> adatoks)
+        {
+            int index = ModositasEleje(adatoks) - 1;
+            Console.Clear();
+            Console.Title = adatoks[index].nev + " módosítás";
+            Console.SetWindowSize(150, 43);
+            Console.CursorSize = 20;
+            Console.ForegroundColor = ConsoleColor.White;
+
+            KilistazInformacio(adatoks, index);
+        }
         static void Main(string[] args)
         {
             List<Adatok> adatoks = Beolvasas();
@@ -426,7 +438,8 @@ namespace szamitasTechinkaiEszkozok
             // Mentes(adatoks);
             // ModositNev(adatoks);
             //ModositAr(adatoks);
-            ModositDb(adatoks);
+            //ModositDb(adatoks);
+            ModositJell(adatoks);
 
             /*int kivalasztott = 0;
             string[] opciok = { "Kilistázás", "Új adat", "Módosítás", "Törlés" };
