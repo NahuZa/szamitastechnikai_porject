@@ -20,32 +20,34 @@ namespace szamitasTechinkaiEszkozok
         }
         static List<Adatok> Beolvasas()
         {
-            StreamReader sr = new StreamReader("Informaciok.txt");
+            StreamReader sr = new StreamReader("informaciok.txt");
             List<Adatok> adatoks = new List<Adatok>();
-
+            int sv = 0;
             while (!sr.EndOfStream)
             {
                 string sor = sr.ReadLine();
+                sv++;
                 string[] sorok = sor.Split(';');
 
-                Adatok temp = new Adatok();
-                temp.nev = sorok[0];
-                temp.ar = int.Parse(sorok[1]);
-                temp.db = int.Parse(sorok[2]);
+                    Adatok temp = new Adatok();
+                    temp.nev = sorok[0];
+                    temp.ar = int.Parse(sorok[1]);
+                    temp.db = int.Parse(sorok[2]);
 
-                string[] svPara = sorok[3].Split('*');
-                for (int i = 0; i < svPara.Length; i++)
-                {
-                    temp.parameterek.Add(svPara[i]);
-                }
+                    string[] svPara = sorok[3].Split('*');
+                    for (int i = 0; i < svPara.Length; i++)
+                    {
+                        temp.parameterek.Add(svPara[i]);
+                    }
 
-                string[] svJellem = sorok[4].Split('*');
-                for (int i = 0; i < svJellem.Length; i++)
-                {
-                    temp.jellemzok.Add(svJellem[i]);
-                }
+                    string[] svJellem = sorok[4].Split('*');
+                    for (int i = 0; i < svJellem.Length; i++)
+                    {
+                        temp.jellemzok.Add(svJellem[i]);
+                    }
 
-                adatoks.Add(temp);
+                    adatoks.Add(temp);
+
             }
             sr.Close();
             return adatoks;
@@ -69,7 +71,8 @@ namespace szamitasTechinkaiEszkozok
                 if (adatoks[i].nev.Contains(keres))
                 {
                     van = true;
-                    KilistazAr(adatoks, i);
+                    //KilistazAr(adatoks, i);
+                    KilistazInformacio(adatoks,i);
                 }
             }
 
@@ -136,7 +139,7 @@ namespace szamitasTechinkaiEszkozok
 
         static void Mentes(List<Adatok> adatoks)
         {
-            TextWriter sw = new StreamWriter("informaciok.txt",true);
+            StreamWriter sw = new StreamWriter("informaciok.txt");
 
             for (int i = 0; i < adatoks.Count(); i++)
             {
@@ -154,7 +157,7 @@ namespace szamitasTechinkaiEszkozok
                     sw.Write($"{adatoks[i].jellemzok[j]}*");
                 }
 
-                sw.Write($"{adatoks[i].jellemzok[adatoks[i].jellemzok.Count() - 1]}\n");
+                sw.Write($"{adatoks[i].jellemzok[adatoks[i].jellemzok.Count() - 1]};\n");
 
             }
 
@@ -331,10 +334,99 @@ namespace szamitasTechinkaiEszkozok
 
             Mentes(adatoks);
         }
+
+        static int ModositasEleje(List<Adatok> adatoks)
+        {
+            Console.Clear();
+
+            Console.ForegroundColor = ConsoleColor.White;
+
+            KilistazTermek(adatoks);
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.Write("Melyiket kívánja módosítani? ");
+            Console.ForegroundColor = ConsoleColor.White;
+            int index = Convert.ToInt32(Console.ReadLine());
+
+            return index;
+        }
+        static void ModositNev(List<Adatok> adatoks)
+        {
+            int index = ModositasEleje(adatoks)-1;
+            Console.Clear();
+            Console.Title = adatoks[index].nev +" módosítás";
+            Console.SetWindowSize(150, 43);
+            Console.CursorSize = 20;
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("Eredeti: ");
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine($" {adatoks[index].nev}");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write("\nAdja meg az új nevet: ");
+            string newName = Console.ReadLine();
+            adatoks[index].nev = newName;
+
+            Mentes(adatoks);
+
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("SIKERESEN MENTVE");
+
+        }
+
+        static void ModositAr(List<Adatok> adatoks)
+        {
+            int index = ModositasEleje(adatoks) - 1;
+            Console.Clear();
+            Console.Title = adatoks[index].nev +" módosítás";
+            Console.SetWindowSize(150, 43);
+            Console.CursorSize = 20;
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("Eredeti ár: ");
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine($" {adatoks[index].ar}FT");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write("\nAdja meg az új árát: ");
+            int newPrice = int.Parse(Console.ReadLine());
+            adatoks[index].ar = newPrice;
+
+            Mentes(adatoks);
+
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("SIKERESEN MENTVE");
+        }
+
+        static void ModositDb(List<Adatok> adatoks)
+        {
+            int index = ModositasEleje(adatoks) - 1;
+            Console.Clear();
+            Console.Title = adatoks[index].nev + " módosítás";
+            Console.SetWindowSize(150, 43);
+            Console.CursorSize = 20;
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("Eredeti mennyiség: ");
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine($" {adatoks[index].db} db");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write("\nAdja meg az új mennyiségét: ");
+            int newQuantity = int.Parse(Console.ReadLine());
+            adatoks[index].db = newQuantity;
+
+            Mentes(adatoks);
+
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("SIKERESEN MENTVE");
+        }
         static void Main(string[] args)
         {
             List<Adatok> adatoks = Beolvasas();
-            KeresoNev(adatoks);
+            //KeresoNev(adatoks);
+            //KeresoAr(adatoks);
+            // Mentes(adatoks);
+            // ModositNev(adatoks);
+            //ModositAr(adatoks);
+            ModositDb(adatoks);
 
             /*int kivalasztott = 0;
             string[] opciok = { "Kilistázás", "Új adat", "Módosítás", "Törlés" };
