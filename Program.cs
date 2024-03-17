@@ -16,16 +16,17 @@ namespace szamitasTechinkaiEszkozok
             public int ar, db;
             public List<string> parameterek = new List<string>();
             public List<string> jellemzok = new List<string>();
+            public int hanyEves;
         }
         static List<Adatok> Beolvasas()
         {
-            StreamReader sr = new StreamReader("Informaciok.txt");
+            StreamReader sr = new StreamReader("informaciok.txt");
             List<Adatok> adatoks = new List<Adatok>();
-            
-
+            int sv = 0;
             while (!sr.EndOfStream)
-                {
+            {
                 string sor = sr.ReadLine();
+                sv++;
                 string[] sorok = sor.Split(';');
 
                 Adatok temp = new Adatok();
@@ -44,8 +45,10 @@ namespace szamitasTechinkaiEszkozok
                 {
                     temp.jellemzok.Add(svJellem[i]);
                 }
+                temp.hanyEves = int.Parse(sorok[5]);
 
                 adatoks.Add(temp);
+
             }
             sr.Close();
             return adatoks;
@@ -215,48 +218,6 @@ namespace szamitasTechinkaiEszkozok
             Mentes(adatoks);
         }
 
-        static void Modositas(List<Adatok> adatoks)
-        {
-            Console.Clear();
-            Console.WriteLine($"Mit szeretnél módosítani?");
-            string[] lehetosegek = { "Név", "Ár", "Mennyiség", "Paraméterek", "Jellemzők"};
-            int kivalasztott = 0;
-            ConsoleKeyInfo lenyomott;
-            do
-            {
-                Console.Clear();
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine("Válasszon az alábbi lehetőségek közül:\n");
-
-                #region Menü kiírása
-                for (int i = 0; i < lehetosegek.Length; i++)
-                {
-                    if (i == kivalasztott)
-                    {
-                        Console.ForegroundColor = ConsoleColor.Green;
-                    }
-                    else
-                    {
-                        Console.ForegroundColor = ConsoleColor.White;
-                    }
-                    Console.WriteLine("\t" + (i + 1) + ") " + lehetosegek[i]);
-                }
-                #endregion
-
-                #region Gomblenyomás
-
-                lenyomott = Console.ReadKey();
-
-                switch (lenyomott.Key)
-                {
-                    case ConsoleKey.UpArrow: if (kivalasztott > 0) kivalasztott--; break;
-                    case ConsoleKey.DownArrow: if (kivalasztott < lehetosegek.Length - 1) kivalasztott++; break;
-                }
-                #endregion
-
-            } while (true);
-        }
-
         static void Mentes(List<Adatok> adatoks)
         {
             StreamWriter sw = new StreamWriter("informaciok.txt");
@@ -379,6 +340,210 @@ namespace szamitasTechinkaiEszkozok
             Console.Write($"{adatoks[index].ar}FT\n");
             
         }
+
+        static bool ElavultE(List<Adatok> adatoks, int index)
+        {
+            int eves = adatoks[index].hanyEves;
+            bool elavult = false;
+            if (eves > 4)
+            {
+                elavult = true;
+            }
+
+            return elavult;
+
+        }
+
+        static int ModositasEleje(List<Adatok> adatoks)
+        {
+            Console.Clear();
+
+            Console.ForegroundColor = ConsoleColor.White;
+
+            KilistazTermek(adatoks);
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.Write("Melyiket kívánja módosítani? ");
+            Console.ForegroundColor = ConsoleColor.White;
+            int index = Convert.ToInt32(Console.ReadLine());
+
+            return index;
+        }
+        static void ModositNev(List<Adatok> adatoks)
+        {
+            int index = ModositasEleje(adatoks) - 1;
+            Console.Clear();
+            Console.Title = adatoks[index].nev + " módosítás";
+            Console.SetWindowSize(150, 43);
+            Console.CursorSize = 20;
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("Eredeti: ");
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine($" {adatoks[index].nev}");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write("\nAdja meg az új nevet: ");
+            string newName = Console.ReadLine();
+            adatoks[index].nev = newName;
+
+            Mentes(adatoks);
+
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("SIKERESEN MENTVE");
+
+        }
+
+        static void ModositAr(List<Adatok> adatoks)
+        {
+            int index = ModositasEleje(adatoks) - 1;
+            Console.Clear();
+            Console.Title = adatoks[index].nev + " módosítás";
+            Console.SetWindowSize(150, 43);
+            Console.CursorSize = 20;
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("Eredeti ár: ");
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine($" {adatoks[index].ar}FT");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write("\nAdja meg az új árát: ");
+            int newPrice = int.Parse(Console.ReadLine());
+            adatoks[index].ar = newPrice;
+
+            Mentes(adatoks);
+
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("SIKERESEN MENTVE");
+        }
+
+        static void ModositDb(List<Adatok> adatoks)
+        {
+            int index = ModositasEleje(adatoks) - 1;
+            Console.Clear();
+            Console.Title = adatoks[index].nev + " módosítás";
+            Console.SetWindowSize(150, 43);
+            Console.CursorSize = 20;
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("Eredeti mennyiség: ");
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine($" {adatoks[index].db} db");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write("\nAdja meg az új mennyiségét: ");
+            int newQuantity = int.Parse(Console.ReadLine());
+            adatoks[index].db = newQuantity;
+
+            Mentes(adatoks);
+
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("SIKERESEN MENTVE");
+        }
+
+        static void ModositJell(List<Adatok> adatoks)
+        {
+            int index = ModositasEleje(adatoks) - 1;
+            Console.Clear();
+            Console.Title = adatoks[index].nev + " módosítás";
+            Console.SetWindowSize(150, 43);
+            Console.CursorSize = 20;
+            Console.ForegroundColor = ConsoleColor.White;
+
+            List<string> jellemzok = KilistazJellem(adatoks, index);
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.Write("Melyiket kívánja módosítani? ");
+            Console.ForegroundColor = ConsoleColor.White;
+            int modositIndex = int.Parse(Console.ReadLine());
+            modositIndex -= 1;
+
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine($"Eredeti:\n{jellemzok[modositIndex]}");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write("Írja be a módosított jellemzőjét az eszköznek: ");
+            jellemzok[modositIndex] = Console.ReadLine();
+
+            for (int i = 0; i < jellemzok.Count(); i++)
+            {
+                adatoks[index].jellemzok[i] = jellemzok[i];
+            }
+
+            Mentes(adatoks);
+        }
+
+        static void ModositPara(List<Adatok> adatoks)
+        {
+            int index = ModositasEleje(adatoks) - 1;
+            Console.Clear();
+            Console.Title = adatoks[index].nev + " módosítás";
+            Console.SetWindowSize(150, 43);
+            Console.CursorSize = 20;
+            Console.ForegroundColor = ConsoleColor.White;
+
+            List<string> parameterek = KilistazPara(adatoks, index);
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.Write("Melyiket kívánja módosítani? ");
+            Console.ForegroundColor = ConsoleColor.White;
+            int modositIndex = int.Parse(Console.ReadLine());
+            modositIndex -= 1;
+
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine($"Eredeti:\n{parameterek[modositIndex]}");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write("Írja be a módosított paraméterét az eszköznek: ");
+            parameterek[modositIndex] = Console.ReadLine();
+
+            for (int i = 0; i < parameterek.Count(); i++)
+            {
+                adatoks[index].parameterek[i] = parameterek[i];
+            }
+
+            Mentes(adatoks);
+        }
+
+
+        static List<string> KilistazJellem(List<Adatok> adatoks, int index)
+        {
+            List<string> list = new List<string>();
+            Console.Clear();
+            Console.Title = adatoks[index].nev + " jellemzői";
+            Console.SetWindowSize(150, 63);
+            Console.CursorSize = 20;
+
+            Console.CursorLeft = 0;
+            Console.WriteLine("Eszköz jellemzői:\n ");
+
+            for (int i = 0; i < adatoks[index].jellemzok.Count(); i++)
+            {
+                Console.CursorLeft = 10;
+                Console.WriteLine($"{i + 1}){adatoks[index].jellemzok[i]}");
+                list.Add(adatoks[index].jellemzok[i]);
+            }
+            Console.WriteLine();
+            return list;
+        }
+
+        static List<string> KilistazPara(List<Adatok> adatoks, int index)
+        {
+            List<string> list = new List<string>();
+            Console.Clear();
+            Console.Title = adatoks[index].nev + " paramáterei";
+            Console.SetWindowSize(150, 43);
+            Console.CursorSize = 20;
+
+            Console.CursorLeft = 0;
+            Console.WriteLine("Műszaki paraméterek:\n ");
+
+
+            for (int i = 0; i < adatoks[index].parameterek.Count(); i++)
+            {
+                Console.CursorLeft = 10;
+                Console.WriteLine($"{i + 1}){adatoks[index].parameterek[i]}");
+                list.Add(adatoks[index].parameterek[i]);
+            }
+            Console.WriteLine();
+            return list;
+        }
+
         static void Main(string[] args)
         {
             List<Adatok> adatoks = Beolvasas();
@@ -480,7 +645,7 @@ namespace szamitasTechinkaiEszkozok
                     }
                     else if (kivalasztott == 2)
                     {
-                        Modositas(adatoks);
+                        ModositPara(adatoks);
                     }
                     else if (kivalasztott == 3)
                     {
