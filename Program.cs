@@ -17,6 +17,7 @@ namespace szamitasTechinkaiEszkozok
             public int ar, db;
             public List<string> parameterek = new List<string>();
             public List<string> jellemzok = new List<string>();
+            public int hanyEves;
         }
         static List<Adatok> Beolvasas()
         {
@@ -29,24 +30,25 @@ namespace szamitasTechinkaiEszkozok
                 sv++;
                 string[] sorok = sor.Split(';');
 
-                    Adatok temp = new Adatok();
-                    temp.nev = sorok[0];
-                    temp.ar = int.Parse(sorok[1]);
-                    temp.db = int.Parse(sorok[2]);
+                Adatok temp = new Adatok();
+                temp.nev = sorok[0];
+                temp.ar = int.Parse(sorok[1]);
+                temp.db = int.Parse(sorok[2]);
 
-                    string[] svPara = sorok[3].Split('*');
-                    for (int i = 0; i < svPara.Length; i++)
-                    {
-                        temp.parameterek.Add(svPara[i]);
-                    }
+                string[] svPara = sorok[3].Split('*');
+                for (int i = 0; i < svPara.Length; i++)
+                {
+                    temp.parameterek.Add(svPara[i]);
+                }
 
-                    string[] svJellem = sorok[4].Split('*');
-                    for (int i = 0; i < svJellem.Length; i++)
-                    {
-                        temp.jellemzok.Add(svJellem[i]);
-                    }
+                string[] svJellem = sorok[4].Split('*');
+                for (int i = 0; i < svJellem.Length; i++)
+                {
+                    temp.jellemzok.Add(svJellem[i]);
+                }
+                temp.hanyEves = int.Parse(sorok[5]);
 
-                    adatoks.Add(temp);
+                adatoks.Add(temp);
 
             }
             sr.Close();
@@ -72,7 +74,7 @@ namespace szamitasTechinkaiEszkozok
                 {
                     van = true;
                     //KilistazAr(adatoks, i);
-                    KilistazInformacio(adatoks,i);
+                    KilistazInformacio(adatoks, i);
                 }
             }
 
@@ -104,7 +106,7 @@ namespace szamitasTechinkaiEszkozok
             Console.Write("Adjon meg egy maximum árat: ");
             Console.ForegroundColor = ConsoleColor.White;
             string maxArS = Console.ReadLine();
-            int maxAr=0;
+            int maxAr = 0;
 
             if (minArS == "")
             {
@@ -124,17 +126,17 @@ namespace szamitasTechinkaiEszkozok
             else { maxAr = int.Parse(maxArS); }
 
             Console.Clear();
-            Console.Title = "Eszközök "+minAr+"FT >-----< "+maxAr+"FT között";
+            Console.Title = "Eszközök " + minAr + "FT >-----< " + maxAr + "FT között";
 
 
             for (int i = 0; i < adatoks.Count(); i++)
             {
-                if (minAr<=adatoks[i].ar && adatoks[i].ar <= maxAr)
+                if (minAr <= adatoks[i].ar && adatoks[i].ar <= maxAr)
                 {
                     KilistazAr(adatoks, i);
                 }
             }
-            
+
         }
 
         static void Mentes(List<Adatok> adatoks)
@@ -145,7 +147,7 @@ namespace szamitasTechinkaiEszkozok
             {
                 sw.Write($"{adatoks[i].nev};{adatoks[i].ar};{adatoks[i].db};");
 
-                for (int j = 0; j <= adatoks[i].parameterek.Count()-2; j++)
+                for (int j = 0; j <= adatoks[i].parameterek.Count() - 2; j++)
                 {
                     sw.Write($"{adatoks[i].parameterek[j]}*");
                 }
@@ -157,7 +159,7 @@ namespace szamitasTechinkaiEszkozok
                     sw.Write($"{adatoks[i].jellemzok[j]}*");
                 }
 
-                sw.Write($"{adatoks[i].jellemzok[adatoks[i].jellemzok.Count() - 1]}\n");
+                sw.Write($"{adatoks[i].jellemzok[adatoks[i].jellemzok.Count() - 1]};{adatoks[i].hanyEves}\n");
 
             }
 
@@ -176,6 +178,19 @@ namespace szamitasTechinkaiEszkozok
             return akcios;
         }
 
+        static bool ElavultE(List<Adatok> adatoks, int index)
+        {
+            int eves = adatoks[index].hanyEves;
+            bool elavult = false;
+            if (eves>4)
+            {
+                elavult = true;
+            }
+
+            return elavult;
+
+        }
+
         static void KilistazInformacio(List<Adatok> adatoks, int index)
         {
             Console.Clear();
@@ -183,11 +198,11 @@ namespace szamitasTechinkaiEszkozok
             Console.SetWindowSize(150, 43);
             Console.CursorSize = 20;
 
-            if (AkciosE(adatoks, index))
+            if (AkciosE(adatoks, index) || ElavultE(adatoks,index))
             {
                 Console.ForegroundColor = ConsoleColor.DarkYellow;
                 Console.WriteLine("Akciós!");
-                Console.CursorLeft = 0; 
+                Console.CursorLeft = 0;
                 Console.ForegroundColor = ConsoleColor.White;
                 Console.Write($"{adatoks[index].nev}");
                 Console.CursorLeft = 50;
@@ -258,6 +273,49 @@ namespace szamitasTechinkaiEszkozok
                 Console.Write($"{adatoks[i].ar}FT\n");
             }
             Console.WriteLine();
+        }
+
+        static List<string> KilistazJellem(List<Adatok> adatoks, int index)
+        {
+            List<string> list = new List<string>();
+            Console.Clear();
+            Console.Title = adatoks[index].nev+" jellemzői";
+            Console.SetWindowSize(150, 63);
+            Console.CursorSize = 20;
+
+            Console.CursorLeft = 0;
+            Console.WriteLine("Eszköz jellemzői:\n ");
+
+            for (int i = 0; i < adatoks[index].jellemzok.Count(); i++)
+            {
+                Console.CursorLeft = 10;
+                Console.WriteLine($"{i+1}){adatoks[index].jellemzok[i]}");
+                list.Add(adatoks[index].jellemzok[i]);
+            }
+            Console.WriteLine();
+            return list;
+        }
+
+        static List<string> KilistazPara(List<Adatok> adatoks, int index)
+        {
+            List<string> list = new List<string>();
+            Console.Clear();
+            Console.Title = adatoks[index].nev + " paramáterei";
+            Console.SetWindowSize(150, 63);
+            Console.CursorSize = 20;
+
+            Console.CursorLeft = 0;
+            Console.WriteLine("Műszaki paraméterek:\n ");
+
+
+            for (int i = 0; i < adatoks[index].parameterek.Count(); i++)
+            {
+                Console.CursorLeft = 10;
+                Console.WriteLine($"{i + 1}){adatoks[index].parameterek[i]}");
+                list.Add(adatoks[index].parameterek[i]);
+            }
+            Console.WriteLine();
+            return list;
         }
 
         static void Uj(List<Adatok> adatoks)
@@ -351,9 +409,9 @@ namespace szamitasTechinkaiEszkozok
         }
         static void ModositNev(List<Adatok> adatoks)
         {
-            int index = ModositasEleje(adatoks)-1;
+            int index = ModositasEleje(adatoks) - 1;
             Console.Clear();
-            Console.Title = adatoks[index].nev +" módosítás";
+            Console.Title = adatoks[index].nev + " módosítás";
             Console.SetWindowSize(150, 43);
             Console.CursorSize = 20;
             Console.ForegroundColor = ConsoleColor.White;
@@ -377,7 +435,7 @@ namespace szamitasTechinkaiEszkozok
         {
             int index = ModositasEleje(adatoks) - 1;
             Console.Clear();
-            Console.Title = adatoks[index].nev +" módosítás";
+            Console.Title = adatoks[index].nev + " módosítás";
             Console.SetWindowSize(150, 43);
             Console.CursorSize = 20;
             Console.ForegroundColor = ConsoleColor.White;
@@ -428,7 +486,57 @@ namespace szamitasTechinkaiEszkozok
             Console.CursorSize = 20;
             Console.ForegroundColor = ConsoleColor.White;
 
-            KilistazInformacio(adatoks, index);
+            List<string> jellemzok = KilistazJellem(adatoks, index);
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.Write("Melyiket kívánja módosítani? ");
+            Console.ForegroundColor = ConsoleColor.White;
+            int modositIndex = int.Parse(Console.ReadLine());
+            modositIndex -= 1;
+
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine($"Eredeti:\n{jellemzok[modositIndex]}");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write("Írja be a módosított jellemzőjét az eszköznek: ");
+            jellemzok[modositIndex] = Console.ReadLine();
+
+            for (int i = 0; i < jellemzok.Count(); i++)
+            {
+                adatoks[index].jellemzok[i] = jellemzok[i];
+            }
+
+            Mentes(adatoks);
+        }
+
+        static void ModositPara(List<Adatok> adatoks)
+        {
+            int index = ModositasEleje(adatoks) - 1;
+            Console.Clear();
+            Console.Title = adatoks[index].nev + " módosítás";
+            Console.SetWindowSize(150, 43);
+            Console.CursorSize = 20;
+            Console.ForegroundColor = ConsoleColor.White;
+
+            List<string> parameterek = KilistazPara(adatoks, index);
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.Write("Melyiket kívánja módosítani? ");
+            Console.ForegroundColor = ConsoleColor.White;
+            int modositIndex = int.Parse(Console.ReadLine());
+            modositIndex -= 1;
+
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine($"Eredeti:\n{parameterek[modositIndex]}");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write("Írja be a módosított paraméterét az eszköznek: ");
+            parameterek[modositIndex] = Console.ReadLine();
+
+            for (int i = 0; i < parameterek.Count(); i++)
+            {
+                adatoks[index].parameterek[i] = parameterek[i];
+            }
+
+            Mentes(adatoks);
         }
         static void Main(string[] args)
         {
@@ -439,7 +547,8 @@ namespace szamitasTechinkaiEszkozok
             // ModositNev(adatoks);
             //ModositAr(adatoks);
             //ModositDb(adatoks);
-            ModositJell(adatoks);
+            //ModositJell(adatoks);
+            ModositPara(adatoks);
 
             /*int kivalasztott = 0;
             string[] opciok = { "Kilistázás", "Új adat", "Módosítás", "Törlés" };
