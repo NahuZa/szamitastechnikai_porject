@@ -72,7 +72,7 @@ namespace szamitasTechinkaiEszkozok
             Console.SetWindowSize(150, 43);
             Console.CursorSize = 20;
 
-            if (AkciosE(adatoks, index)||ElavultE(adatoks,index))
+            if (AkciosE(adatoks, index))
             {
                 Console.ForegroundColor = ConsoleColor.DarkYellow;
                 Console.WriteLine("Akciós!");
@@ -130,19 +130,19 @@ namespace szamitasTechinkaiEszkozok
             for (int i = 0; i < adatoks.Count(); i++)
             {
                 Console.CursorLeft = 0;
-                Console.Write($"{i + 1}) {adatoks[i].nev}");
+                Console.Write($"{i+1}) {adatoks[i].nev}");
                 Console.CursorLeft = 90;
                 Console.Write($"{adatoks[i].ar}FT\n");
             }
             Console.WriteLine();
         }
 
-
+    
         static void Uj(List<Adatok> adatoks)
 
         {
 
-
+       
 
             List<string> parameterek = new List<string>();
 
@@ -151,8 +151,6 @@ namespace szamitasTechinkaiEszkozok
             Adatok temp = new Adatok();
 
             Console.Clear();
-
-            Console.Title = "Új adat bevitele";
 
             Console.WriteLine("Az eszköz neve? ");
 
@@ -212,13 +210,11 @@ namespace szamitasTechinkaiEszkozok
 
             adatoks.Add(temp);
 
-            Mentes(adatoks);
-
         }
 
         static void Torles(List<Adatok> adatoks, int index)
         {
-            adatoks.RemoveAt(index - 1);
+          adatoks.RemoveAt(index-1);
             Mentes(adatoks);
         }
 
@@ -242,7 +238,7 @@ namespace szamitasTechinkaiEszkozok
                     sw.Write($"{adatoks[i].jellemzok[j]}*");
                 }
 
-                sw.Write($"{adatoks[i].jellemzok[adatoks[i].jellemzok.Count() - 1]};{adatoks[i].hanyEves}\n");
+                sw.Write($"{adatoks[i].jellemzok[adatoks[i].jellemzok.Count() - 1]}\n");
 
             }
 
@@ -321,14 +317,21 @@ namespace szamitasTechinkaiEszkozok
 
             Console.Clear();
             Console.Title = "Eszközök " + minAr + "FT >-----< " + maxAr + "FT között";
-
+            bool vanIlyen = false;
 
             for (int i = 0; i < adatoks.Count(); i++)
             {
                 if (minAr <= adatoks[i].ar && adatoks[i].ar <= maxAr)
                 {
+                    vanIlyen = true;
                     KilistazAr(adatoks, i);
                 }
+            }
+            if (!vanIlyen)
+            {
+                Console.ForegroundColor = ConsoleColor.DarkRed;
+                Console.WriteLine("Nincs ilyen termék.");
+                Console.ForegroundColor = ConsoleColor.White;
             }
 
         }
@@ -342,7 +345,7 @@ namespace szamitasTechinkaiEszkozok
             Console.Write($"{adatoks[index].nev}");
             Console.CursorLeft = 90;
             Console.Write($"{adatoks[index].ar}FT\n");
-
+            
         }
 
         static bool ElavultE(List<Adatok> adatoks, int index)
@@ -649,7 +652,61 @@ namespace szamitasTechinkaiEszkozok
                     }
                     else if (kivalasztott == 2)
                     {
-                        ModositPara(adatoks);
+                        Console.Clear();
+                        int masodikbentkivalasztott = 0;
+                        ConsoleKeyInfo masodikbentlenyomott;
+                        string[] modositasok = { "Módosítás: Név", "Módosítás: Ár", "Módosítás: Mennyiség" , "Módosítás: Jellemzők", "Módosítás: Paraméterek", "Vissza" };
+                        do
+                        {
+                            Console.Clear();
+                            for (int i = 0; i < modositasok.Length; i++)
+                            {
+                                if (i == masodikbentkivalasztott)
+                                {
+                                    Console.ForegroundColor = ConsoleColor.Green;
+                                }
+                                else
+                                {
+                                    Console.ForegroundColor = ConsoleColor.White;
+                                }
+                                Console.WriteLine("\t" + (i + 1) + ") " + modositasok[i]);
+                            }
+                            masodikbentlenyomott = Console.ReadKey();
+
+                            switch (masodikbentlenyomott.Key)
+                            {
+                                case ConsoleKey.UpArrow: if (masodikbentkivalasztott > 0) masodikbentkivalasztott--; break;
+                                case ConsoleKey.DownArrow: if (masodikbentkivalasztott < modositasok.Length - 1) masodikbentkivalasztott++; break;
+                            }
+
+                            if(masodikbentlenyomott.Key == ConsoleKey.Enter)
+                            {
+                                if (masodikbentkivalasztott == 0)
+                                {
+                                    ModositNev(adatoks);
+                                }
+                                else if (masodikbentkivalasztott == 1)
+                                {
+                                    ModositAr(adatoks);
+                                }
+                                else if (masodikbentkivalasztott == 2)
+                                {
+                                    ModositDb(adatoks);
+                                }
+                                else if (masodikbentkivalasztott == 3)
+                                {
+                                    ModositJell(adatoks);
+                                }
+                                else if (masodikbentkivalasztott == 4)
+                                {
+                                    ModositPara(adatoks);
+                                }
+                                else if(masodikbentkivalasztott == 5)
+                                {
+                                    goto MenuCommand;
+                                }
+                            }
+                        } while (orok==true);
                     }
                     else if (kivalasztott == 3)
                     {
@@ -711,9 +768,9 @@ namespace szamitasTechinkaiEszkozok
                             }
                             #endregion
 
-                            if (bentlenyomott.Key == ConsoleKey.Enter)
+                            if (bentlenyomott.Key==ConsoleKey.Enter)
                             {
-                                if (valasztott == 0)
+                                if(valasztott == 0)
                                 {
                                     KeresoAr(adatoks);
                                     Console.Write($"Írja be hogy 'vissza', ha vissza szeretne lépni: ");
@@ -740,7 +797,7 @@ namespace szamitasTechinkaiEszkozok
                                     goto MenuCommand;
                                 }
                             }
-
+                           
                         } while (orok == true);
                         #endregion
                     }
@@ -758,7 +815,7 @@ namespace szamitasTechinkaiEszkozok
                         }
                     }
                 }
-            } while (orok == true);
+            } while (orok==true);
             #endregion
 
 
