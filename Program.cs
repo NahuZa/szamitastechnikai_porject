@@ -130,19 +130,19 @@ namespace szamitasTechinkaiEszkozok
             for (int i = 0; i < adatoks.Count(); i++)
             {
                 Console.CursorLeft = 0;
-                Console.Write($"{i+1}) {adatoks[i].nev}");
+                Console.Write($"{i + 1}) {adatoks[i].nev}");
                 Console.CursorLeft = 90;
                 Console.Write($"{adatoks[i].ar}FT\n");
             }
             Console.WriteLine();
         }
 
-    
+
         static void Uj(List<Adatok> adatoks)
 
         {
 
-       
+
 
             List<string> parameterek = new List<string>();
 
@@ -214,7 +214,7 @@ namespace szamitasTechinkaiEszkozok
 
         static void Torles(List<Adatok> adatoks, int index)
         {
-          adatoks.RemoveAt(index-1);
+            adatoks.RemoveAt(index - 1);
             Mentes(adatoks);
         }
 
@@ -238,7 +238,7 @@ namespace szamitasTechinkaiEszkozok
                     sw.Write($"{adatoks[i].jellemzok[j]}*");
                 }
 
-                sw.Write($"{adatoks[i].jellemzok[adatoks[i].jellemzok.Count() - 1]}\n");
+                sw.Write($"{adatoks[i].jellemzok[adatoks[i].jellemzok.Count() - 1]};{adatoks[i].hanyEves}\n");
 
             }
 
@@ -345,7 +345,7 @@ namespace szamitasTechinkaiEszkozok
             Console.Write($"{adatoks[index].nev}");
             Console.CursorLeft = 90;
             Console.Write($"{adatoks[index].ar}FT\n");
-            
+
         }
 
         static bool ElavultE(List<Adatok> adatoks, int index)
@@ -655,7 +655,7 @@ namespace szamitasTechinkaiEszkozok
                         Console.Clear();
                         int masodikbentkivalasztott = 0;
                         ConsoleKeyInfo masodikbentlenyomott;
-                        string[] modositasok = { "Módosítás: Név", "Módosítás: Ár", "Módosítás: Mennyiség" , "Módosítás: Jellemzők", "Módosítás: Paraméterek", "Vissza" };
+                        string[] modositasok = { "Módosítás: Név", "Módosítás: Ár", "Módosítás: Mennyiség", "Módosítás: Jellemzők", "Módosítás: Paraméterek", "Vissza" };
                         do
                         {
                             Console.Clear();
@@ -679,7 +679,7 @@ namespace szamitasTechinkaiEszkozok
                                 case ConsoleKey.DownArrow: if (masodikbentkivalasztott < modositasok.Length - 1) masodikbentkivalasztott++; break;
                             }
 
-                            if(masodikbentlenyomott.Key == ConsoleKey.Enter)
+                            if (masodikbentlenyomott.Key == ConsoleKey.Enter)
                             {
                                 if (masodikbentkivalasztott == 0)
                                 {
@@ -701,12 +701,12 @@ namespace szamitasTechinkaiEszkozok
                                 {
                                     ModositPara(adatoks);
                                 }
-                                else if(masodikbentkivalasztott == 5)
+                                else if (masodikbentkivalasztott == 5)
                                 {
                                     goto MenuCommand;
                                 }
                             }
-                        } while (orok==true);
+                        } while (orok == true);
                     }
                     else if (kivalasztott == 3)
                     {
@@ -768,9 +768,9 @@ namespace szamitasTechinkaiEszkozok
                             }
                             #endregion
 
-                            if (bentlenyomott.Key==ConsoleKey.Enter)
+                            if (bentlenyomott.Key == ConsoleKey.Enter)
                             {
-                                if(valasztott == 0)
+                                if (valasztott == 0)
                                 {
                                     KeresoAr(adatoks);
                                     Console.Write($"Írja be hogy 'vissza', ha vissza szeretne lépni: ");
@@ -797,7 +797,7 @@ namespace szamitasTechinkaiEszkozok
                                     goto MenuCommand;
                                 }
                             }
-                           
+
                         } while (orok == true);
                         #endregion
                     }
@@ -815,7 +815,7 @@ namespace szamitasTechinkaiEszkozok
                         }
                     }
                 }
-            } while (orok==true);
+            } while (orok == true);
             #endregion
 
 
